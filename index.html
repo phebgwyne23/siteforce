@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F97316">
+<title>SiteForce</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:#F97316; --orange-dim:#c45a0d; --yellow:#FCD34D;
+  --dark:#111110; --dark2:#1c1b18; --dark3:#2a2925; --mid:#3d3b35;
+  --light:#e8e4da; --muted:#8a8678;
+  --green:#4ade80; --red:#f87171; --blue:#60a5fa; --purple:#c084fc;
+  --fd:'Bebas Neue',sans-serif; --fm:'IBM Plex Mono',monospace; --fb:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--dark);color:var(--light);font-family:var(--fb);min-height:100vh;max-width:480px;margin:0 auto;overflow-x:hidden;padding-bottom:80px}
+
+/* ── HEADER ── */
+.hdr{background:var(--dark2);border-bottom:2px solid var(--orange);padding:12px 16px 10px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between}
+.hdr-title{font-family:var(--fd);font-size:26px;letter-spacing:2px;color:var(--orange);display:flex;align-items:center;gap:8px}
+.hdr-back{background:none;border:none;color:var(--orange);font-size:20px;cursor:pointer;padding:0;line-height:1}
+.hdr-proj{font-family:var(--fm);font-size:11px;color:var(--yellow);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-right{text-align:right}
+.hdr-time{font-family:var(--fm);font-size:13px;color:var(--yellow);font-weight:600}
+.hdr-date{font-family:var(--fm);font-size:10px;color:var(--muted)}
+
+/* ── NAV ── */
+.nav{display:flex;background:var(--dark2);border-bottom:1px solid var(--mid);overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{flex:1;min-width:60px;padding:9px 4px 7px;background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);font-family:var(--fm);font-size:9px;font-weight:600;letter-spacing:.5px;cursor:pointer;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:3px}
+.nav-btn.active{color:var(--orange);border-bottom-color:var(--orange)}
+.nav-icon{font-size:18px}
+
+/* ── SCREENS ── */
+.screen{display:none;padding:14px}
+.screen.active{display:block}
+
+/* ── CARDS / FIELDS ── */
+.sh{font-family:var(--fd);font-size:20px;letter-spacing:2px;color:var(--light);margin-bottom:12px;border-left:4px solid var(--orange);padding-left:10px;display:flex;align-items:center;justify-content:space-between}
+.card{background:var(--dark2);border:1px solid var(--mid);border-radius:8px;padding:14px;margin-bottom:12px}
+.ct{font-family:var(--fm);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--orange);margin-bottom:10px}
+.f{background:var(--dark3);border:1px solid var(--mid);border-radius:6px;padding:9px 11px;color:var(--light);font-family:var(--fb);font-size:14px;width:100%;margin-bottom:8px}
+.f:focus{outline:1px solid var(--orange)} .f::placeholder{color:var(--muted)}
+textarea.f{resize:none;min-height:68px} select.f{cursor:pointer}
+.row2{display:flex;gap:8px;margin-bottom:8px} .row2 .f{margin-bottom:0}
+.btn{background:var(--orange);color:#fff;border:none;border-radius:6px;padding:11px 18px;font-family:var(--fm);font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;width:100%;margin-top:8px}
+.btn:active{background:var(--orange-dim)}
+.btn-o{background:transparent;border:1px solid var(--mid);color:var(--light);margin-top:0}
+.btn-sm{padding:6px 12px;font-size:11px;width:auto;margin-top:0}
+.btn-print{background:#1a3d2a;color:var(--green);border:1px solid var(--green);border-radius:6px;padding:10px 16px;font-family:var(--fm);font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;width:100%;margin-top:8px}
+.del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 4px}
+
+/* ── PROJECT CARDS ── */
+.proj-card{background:var(--dark2);border:1px solid var(--mid);border-radius:10px;padding:14px 16px;margin-bottom:12px;cursor:pointer;transition:border-color .2s,transform .1s;position:relative;display:flex;gap:12px;align-items:center}
+.proj-card:active{transform:scale(.98)}
+.proj-card.active-proj{border-color:var(--orange)}
+.proj-icon{width:46px;height:46px;min-width:46px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.proj-info{flex:1;min-width:0}
+.proj-name{font-family:var(--fd);font-size:18px;letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-loc{font-family:var(--fm);font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.proj-stats{display:flex;gap:10px;margin-top:6px}
+.proj-stat{font-family:var(--fm);font-size:10px;color:var(--muted)}
+.proj-stat span{color:var(--yellow);font-weight:600}
+.proj-arrow{color:var(--orange);font-size:18px;margin-left:4px}
+.proj-delete{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px}
+
+/* ── STATS GRID ── */
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.sb{background:var(--dark3);border:1px solid var(--mid);border-radius:6px;padding:12px 8px;text-align:center}
+.sn{font-family:var(--fd);font-size:30px;color:var(--yellow);line-height:1}
+.sl{font-family:var(--fm);font-size:9px;color:var(--muted);text-transform:uppercase;margin-top:3px}
+
+/* ── WEATHER ── */
+.wx{background:var(--dark3);border:1px solid var(--mid);border-radius:6px;padding:10px 14px;display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.wx-icon{font-size:28px}
+.wx-temp{font-family:var(--fd);font-size:24px;color:var(--yellow);line-height:1}
+.wx-desc{font-family:var(--fm);font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.haz{font-family:var(--fm);font-size:10px;padding:4px 9px;border-radius:4px;text-transform:uppercase;font-weight:600;margin-left:auto}
+.haz-low{background:#1a3d2a;color:var(--green)} .haz-mid{background:#3d2a1a;color:var(--orange)} .haz-hi{background:#3d1a1a;color:var(--red)}
+
+/* ── ATTENDANCE ── */
+.ap-sum{display:flex;gap:8px;margin-bottom:12px}
+.ap{flex:1;background:var(--dark3);border-radius:6px;padding:8px;text-align:center;font-family:var(--fm);font-size:10px;text-transform:uppercase}
+.apn{font-family:var(--fd);font-size:22px;line-height:1;margin-bottom:2px}
+.ap.p .apn{color:var(--green)} .ap.h .apn{color:var(--orange)} .ap.a .apn{color:var(--red)}
+.wr{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--dark3)}
+.wr:last-child{border-bottom:none}
+.wav{width:36px;height:36px;min-width:36px;border-radius:50%;background:var(--mid);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:16px;color:var(--orange)}
+.wi{flex:1} .wn{font-size:14px;font-weight:600} .wrl{font-family:var(--fm);font-size:10px;color:var(--muted);text-transform:uppercase}
+.ab-btns{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.ab{padding:6px 10px;border-radius:20px;border:none;font-family:var(--fm);font-size:11px;font-weight:600;cursor:pointer;text-transform:uppercase}
+.ab.present{background:#1a3d2a;color:var(--green)} .ab.absent{background:#3d1a1a;color:var(--red)} .ab.half{background:#3d2a1a;color:var(--orange)} .ab.none{background:var(--dark3);color:var(--muted);border:1px solid var(--mid)}
+
+/* ── ACTIVITIES ── */
+.ai{background:var(--dark3);border-left:3px solid var(--blue);border-radius:0 6px 6px 0;padding:10px 12px;margin-bottom:8px}
+.ai.done{border-left-color:var(--green)} .ai.delayed{border-left-color:var(--red)}
+.ai-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.ai-name{font-size:14px;font-weight:600;flex:1;margin-right:8px}
+.sb2{font-family:var(--fm);font-size:10px;padding:2px 8px;border-radius:99px;text-transform:uppercase;white-space:nowrap}
+.bg-ongoing{background:#1a2a3d;color:var(--blue)} .bg-done{background:#1a3d2a;color:var(--green)} .bg-delayed{background:#3d1a1a;color:var(--red)}
+.ai-area{font-family:var(--fm);font-size:10px;color:var(--muted);text-transform:uppercase}
+.ai-notes{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4}
+.ai-foot{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.ai-wk{font-family:var(--fm);font-size:10px;color:var(--muted)}
+.pw{background:var(--dark3);border-radius:99px;height:10px;overflow:hidden;margin-top:6px}
+.pb{height:100%;border-radius:99px;transition:width .4s}
+.pb-lo{background:var(--red)} .pb-mi{background:var(--orange)} .pb-hi{background:var(--green)}
+
+/* ── ACCOMPLISHMENTS ── */
+.ac-item{background:var(--dark3);border:1px solid var(--mid);border-radius:6px;padding:12px;margin-bottom:10px}
+.ac-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.ac-title{font-size:14px;font-weight:600;flex:1;margin-right:8px}
+.ac-desc{font-size:13px;color:var(--light);line-height:1.5}
+.ac-meta{display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap}
+.ac-tag{font-family:var(--fm);font-size:10px;padding:3px 8px;border-radius:99px;text-transform:uppercase}
+.ac-tag.structural{background:#1a2a3d;color:var(--blue)} .ac-tag.finishing{background:#2a1a3d;color:var(--purple)}
+.ac-tag.electrical{background:#3d2a1a;color:var(--orange)} .ac-tag.plumbing{background:#1a3d3d;color:#22d3ee}
+.ac-tag.civil{background:#1a3d2a;color:var(--green)} .ac-tag.other{background:var(--mid);color:var(--light)}
+.ac-pct{font-family:var(--fm);font-size:11px;color:var(--yellow);font-weight:600;margin-left:auto}
+.dgl{font-family:var(--fm);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--dark3)}
+
+/* ── RECEIPTS ── */
+.rc-item{background:var(--dark3);border:1px solid var(--mid);border-radius:8px;padding:12px;margin-bottom:10px}
+.rc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.rc-desc{font-size:14px;font-weight:600;flex:1;margin-right:8px}
+.rc-amount{font-family:var(--fd);font-size:22px;color:var(--yellow);white-space:nowrap;line-height:1}
+.rc-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px}
+.rc-tag{font-family:var(--fm);font-size:10px;padding:3px 8px;border-radius:99px;text-transform:uppercase}
+.rc-tag.materials{background:#1a2a3d;color:var(--blue)}
+.rc-tag.labor{background:#2a1a3d;color:var(--purple)}
+.rc-tag.equipment{background:#3d2a1a;color:var(--orange)}
+.rc-tag.transport{background:#1a3d3d;color:#22d3ee}
+.rc-tag.office{background:#1a3d2a;color:var(--green)}
+.rc-tag.other{background:var(--mid);color:var(--light)}
+.rc-date{font-family:var(--fm);font-size:10px;color:var(--muted)}
+.rc-note{font-size:12px;color:var(--muted);margin-top:4px}
+.rc-unsubmitted{background:#3d2a1a;color:var(--orange);font-family:var(--fm);font-size:10px;padding:2px 8px;border-radius:99px;text-transform:uppercase}
+.rc-submitted{background:#1a3d2a;color:var(--green);font-family:var(--fm);font-size:10px;padding:2px 8px;border-radius:99px;text-transform:uppercase;cursor:pointer}
+.rc-total-bar{background:var(--dark2);border:1px solid var(--mid);border-radius:8px;padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.rc-total-label{font-family:var(--fm);font-size:11px;color:var(--muted);text-transform:uppercase}
+.rc-total-amt{font-family:var(--fd);font-size:28px;color:var(--yellow)}
+.rc-unsub-amt{font-family:var(--fm);font-size:11px;color:var(--orange);margin-top:2px}
+
+/* ── TO-DO ── */
+.todo-item{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid var(--dark3)}
+.todo-item:last-child{border-bottom:none}
+.todo-check{width:22px;height:22px;min-width:22px;border:2px solid var(--mid);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:1px;transition:all .15s;background:none}
+.todo-check.done-c{background:var(--green);border-color:var(--green)}
+.todo-body{flex:1}
+.todo-text{font-size:14px;line-height:1.4}
+.todo-text.striked{text-decoration:line-through;color:var(--muted)}
+.todo-meta{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;align-items:center}
+.todo-proj-tag{font-family:var(--fm);font-size:10px;padding:2px 8px;border-radius:99px;background:var(--dark3);border:1px solid var(--mid);color:var(--muted);text-transform:uppercase}
+.todo-due{font-family:var(--fm);font-size:10px;color:var(--muted)}
+.todo-due.overdue{color:var(--red)}
+.todo-due.today-due{color:var(--orange)}
+.todo-pri{font-size:14px}
+.todo-filter-bar{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.todo-filter-bar::-webkit-scrollbar{display:none}
+.tf{background:var(--dark3);border:1px solid var(--mid);border-radius:99px;padding:5px 12px;font-family:var(--fm);font-size:10px;color:var(--muted);cursor:pointer;white-space:nowrap;border:1px solid var(--mid)}
+.tf.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+
+/* ── SUMMARY ── */
+.sum-row{display:grid;grid-template-columns:1fr 72px 64px;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--dark3)}
+.sum-row:last-child{border-bottom:none}
+.sum-name{font-size:13px;font-weight:600}
+.sum-area{font-family:var(--fm);font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.sum-pn{font-family:var(--fd);font-size:22px;color:var(--yellow);text-align:right;line-height:1}
+.sum-ps{font-family:var(--fm);font-size:9px;color:var(--muted);text-transform:uppercase;text-align:right}
+.ov-pct{font-family:var(--fd);font-size:50px;color:var(--yellow);text-align:center;line-height:1}
+.ov-lbl{font-family:var(--fm);font-size:11px;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:1px;margin-top:4px;margin-bottom:12px}
+.ov-pw{background:var(--dark3);border-radius:99px;height:14px;overflow:hidden;margin-bottom:14px}
+.ov-pb{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--orange),var(--yellow));transition:width .5s}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--orange);color:#fff;font-family:var(--fm);font-size:12px;padding:10px 20px;border-radius:99px;opacity:0;transition:all .25s;z-index:999;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── MODALS ── */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:flex-end;justify-content:center}
+.mo.open{display:flex}
+.md{background:var(--dark2);border:1px solid var(--mid);border-radius:14px 14px 0 0;padding:20px 16px 36px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto}
+.md-title{font-family:var(--fd);font-size:22px;letter-spacing:2px;color:var(--orange);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.mc{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:28px 16px;color:var(--muted);font-family:var(--fm);font-size:12px}
+.empty-ic{font-size:34px;margin-bottom:8px}
+
+/* ── PRINT ── */
+@media print {
+  body{background:#fff!important;color:#000!important;max-width:100%!important;padding:0!important;font-family:Arial,sans-serif!important}
+  .hdr,.nav,.no-print,.btn,.btn-o,.btn-sm,.btn-print,.toast,.mo{display:none!important}
+  .screen{display:none!important}
+  .screen.print-active{display:block!important;padding:0!important}
+  .print-show{display:block!important}
+  @page{margin:15mm}
+}
+.print-show{display:none}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr" id="hdr">
+  <div class="hdr-title">
+    <button class="hdr-back" id="btnBack" style="display:none" onclick="goHome()">‹</button>
+    <span>⚙ SITEFORCE</span>
+  </div>
+  <div class="hdr-right">
+    <div class="hdr-time" id="hTime">--:--</div>
+    <div class="hdr-date" id="hDate">---</div>
+  </div>
+</div>
+<div style="background:var(--dark2);border-bottom:1px solid var(--mid);padding:6px 16px;display:none" id="projBanner">
+  <div style="font-family:var(--fm);font-size:10px;color:var(--muted);text-transform:uppercase">ACTIVE PROJECT</div>
+  <div style="font-family:var(--fd);font-size:15px;letter-spacing:1px;color:var(--yellow)" id="projBannerName"></div>
+</div>
+
+<!-- PROJECT CHOOSER NAV -->
+<nav class="nav" id="projNav" style="display:none">
+  <button class="nav-btn active" onclick="go('dash')" id="tab-dash"><span class="nav-icon">🏗</span>DASH</button>
+  <button class="nav-btn" onclick="go('attendance')" id="tab-attendance"><span class="nav-icon">👷</span>ATTEND</button>
+  <button class="nav-btn" onclick="go('activities')" id="tab-activities"><span class="nav-icon">⚒️</span>ACTIV</button>
+  <button class="nav-btn" onclick="go('accomplishments')" id="tab-accomplishments"><span class="nav-icon">🏆</span>ACCOMP</button>
+  <button class="nav-btn" onclick="go('summary')" id="tab-summary"><span class="nav-icon">📊</span>SUMMARY</button>
+  <button class="nav-btn" onclick="go('receipts')" id="tab-receipts"><span class="nav-icon">🧾</span>RECEIPT</button>
+  <button class="nav-btn" onclick="go('todos')" id="tab-todos"><span class="nav-icon">✅</span>TO-DO</button>
+</nav>
+
+<!-- ══════════════ HOME: PROJECTS LIST ══════════════ -->
+<div class="screen active" id="screen-home" style="padding:14px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div style="font-family:var(--fd);font-size:28px;letter-spacing:3px;color:var(--orange)">MY PROJECTS</div>
+    <button class="btn btn-sm" style="margin-top:0" onclick="openModal('newProjModal')">+ New</button>
+  </div>
+
+  <!-- weather on home -->
+  <div class="wx">
+    <div class="wx-icon" id="wIcon">🌡</div>
+    <div><div class="wx-temp" id="wTemp">—°C</div><div class="wx-desc" id="wDesc">Loading…</div></div>
+    <div class="haz haz-low" id="wHaz">LOW RISK</div>
+  </div>
+
+  <div id="projList">
+    <div class="empty"><div class="empty-ic">🏗</div>No projects yet.<br>Tap "+ New" to add your first project.</div>
+  </div>
+</div>
+
+<!-- ══════════════ DASHBOARD ══════════════ -->
+<div class="screen" id="screen-dash">
+  <div class="sg">
+    <div class="sb"><div class="sn" id="dPresent">0</div><div class="sl">Present</div></div>
+    <div class="sb"><div class="sn" id="dAct">0</div><div class="sl">Activities</div></div>
+    <div class="sb"><div class="sn" id="dAcc">0</div><div class="sl">Accompl.</div></div>
+  </div>
+  <div class="card">
+    <div class="ct">📊 Today's Summary</div>
+    <div id="dashSum" style="font-size:13px;line-height:1.9;color:var(--muted)">No data yet for today.</div>
+  </div>
+  <div class="card">
+    <div class="ct">⚙️ Project Info</div>
+    <input class="f" id="piName" placeholder="Project name" oninput="saveProjInfo()"/>
+    <input class="f" id="piLoc" placeholder="Location / area" oninput="saveProjInfo()"/>
+    <input class="f" id="piForeman" placeholder="Foreman / supervisor name" oninput="saveProjInfo()"/>
+  </div>
+</div>
+
+<!-- ══════════════ ATTENDANCE ══════════════ -->
+<div class="screen print-active" id="screen-attendance">
+  <div class="sh no-print">
+    ATTENDANCE
+    <button class="btn btn-sm btn-o" onclick="openModal('wkModal')">+ Worker</button>
+  </div>
+
+  <!-- Week selector -->
+  <div class="no-print" style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+    <button class="btn btn-o btn-sm" onclick="shiftWeek(-1)">‹ Prev</button>
+    <div style="flex:1;text-align:center;font-family:var(--fm);font-size:11px;color:var(--yellow)" id="weekLabel"></div>
+    <button class="btn btn-o btn-sm" onclick="shiftWeek(1)">Next ›</button>
+  </div>
+
+  <!-- Daily attendance summary pills -->
+  <div id="dayPills" class="no-print" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none"></div>
+
+  <!-- Worker list with today's status -->
+  <div id="wkList" class="no-print"><div class="empty"><div class="empty-ic">👷</div>No workers yet. Tap "+ Worker".</div></div>
+
+  <div style="display:flex;gap:8px;margin-top:8px" class="no-print">
+    <button class="btn btn-o" style="flex:1" onclick="printWeeklyPayroll()">🖨 Weekly Payroll</button>
+  </div>
+
+  <!-- ══ WEEKLY PAYROLL PRINT AREA ══ -->
+  <div class="print-show" id="pWeeklyArea" style="font-family:Arial,sans-serif;color:#000">
+
+    <!-- Header -->
+    <div style="text-align:center;margin-bottom:10px">
+      <div style="font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:1px" id="pwCompany">BRENT-NATHAN REALTY & DEVELOPMENT CORP.</div>
+      <div style="font-size:13px;font-weight:700;margin-top:4px" id="pwProjName"></div>
+      <div style="font-size:11px;margin-top:2px" id="pwProjLoc"></div>
+    </div>
+
+    <!-- Charge / Voucher row -->
+    <div style="display:flex;gap:20px;font-size:11px;margin-bottom:6px;border-top:1px solid #000;padding-top:6px">
+      <div>Charge to: <span id="pwCharge" style="font-weight:700"></span></div>
+      <div>Date: <span id="pwDate" style="font-weight:700"></span></div>
+      <div>Voucher No.: <span id="pwVoucher" style="border-bottom:1px solid #000;display:inline-block;min-width:80px">&nbsp;</span></div>
+    </div>
+    <div style="font-size:11px;margin-bottom:8px">Particulars: <span id="pwParticulars" style="font-weight:700"></span></div>
+
+    <!-- Main payroll table -->
+    <table id="pwTable" style="border-collapse:collapse;width:100%;font-size:10px">
+      <thead id="pwHead"></thead>
+      <tbody id="pwBody"></tbody>
+      <tfoot id="pwFoot"></tfoot>
+    </table>
+
+    <!-- Total -->
+    <div style="display:flex;justify-content:flex-end;margin-top:4px;font-size:12px">
+      <div style="border:1px solid #000;padding:4px 12px;font-weight:900">TOTAL = <span id="pwTotal"></span></div>
+    </div>
+
+    <!-- Activities -->
+    <div style="margin-top:10px;font-size:11px">
+      <b>Activities:</b> <span id="pwActivities"></span>
+    </div>
+
+    <!-- Signatures -->
+    <div style="display:flex;justify-content:space-between;margin-top:36px;font-size:11px">
+      <div style="text-align:center;width:30%"><div style="border-top:1px solid #000;padding-top:4px;margin-top:28px">Prepared by</div></div>
+      <div style="text-align:center;width:30%"><div style="border-top:1px solid #000;padding-top:4px;margin-top:28px">Checked by</div></div>
+      <div style="text-align:center;width:30%"><div style="border-top:1px solid #000;padding-top:4px;margin-top:28px">Approved by</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ACTIVITIES ══════════════ -->
+<div class="screen" id="screen-activities">
+  <div class="sh no-print">
+    ACTIVITIES
+    <button class="btn btn-sm btn-o" onclick="openModal('actModal')">+ Add</button>
+  </div>
+  <div class="card no-print" style="padding:10px 14px;margin-bottom:12px">
+    <select class="f" id="actFilter" onchange="renderActivities()" style="margin-bottom:0">
+      <option value="all">All Status</option>
+      <option value="ongoing">Ongoing</option>
+      <option value="done">Done</option>
+      <option value="delayed">Delayed</option>
+    </select>
+  </div>
+  <div id="actList"><div class="empty"><div class="empty-ic">⚒️</div>No activities logged yet.</div></div>
+</div>
+
+<!-- ══════════════ ACCOMPLISHMENTS ══════════════ -->
+<div class="screen" id="screen-accomplishments">
+  <div class="sh">
+    ACCOMPL.
+    <button class="btn btn-sm btn-o" onclick="openModal('accModal')">+ Add</button>
+  </div>
+  <div id="accList"><div class="empty"><div class="empty-ic">🏆</div>No accomplishments yet.</div></div>
+</div>
+
+<!-- ══════════════ SUMMARY ══════════════ -->
+<div class="screen print-active" id="screen-summary">
+  <div class="sh no-print">
+    SUMMARY
+    <button class="btn-print btn-sm" onclick="printSum()" style="width:auto;padding:6px 14px">🖨 Print</button>
+  </div>
+  <div id="sumContent" class="no-print"></div>
+  <!-- PRINT AREA -->
+  <div class="print-show" id="pSumArea">
+    <div style="text-align:center;margin-bottom:16px;border-bottom:2px solid #000;padding-bottom:12px">
+      <div style="font-size:20px;font-weight:900;letter-spacing:2px;text-transform:uppercase" id="sProjName"></div>
+      <div style="font-size:13px;margin-top:4px" id="sProjLoc"></div>
+      <div style="font-size:18px;font-weight:700;margin-top:8px">ACTIVITIES &amp; ACCOMPLISHMENT SUMMARY</div>
+      <div style="font-size:12px;margin-top:4px" id="sDate"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:14px">
+      <div><b>Foreman:</b> <span id="sForeman">—</span></div>
+      <div><b>Overall Progress:</b> <span id="sOverall" style="font-weight:900">—</span></div>
+    </div>
+    <table style="color:#000;border-collapse:collapse;width:100%;font-size:12px">
+      <thead><tr>
+        <th style="background:#f0f0f0;padding:8px 6px;border:1px solid #999;font-size:11px">#</th>
+        <th style="background:#f0f0f0;padding:8px 6px;border:1px solid #999;font-size:11px">ACTIVITY</th>
+        <th style="background:#f0f0f0;padding:8px 6px;border:1px solid #999;font-size:11px">AREA</th>
+        <th style="background:#f0f0f0;padding:8px 6px;border:1px solid #999;font-size:11px">STATUS</th>
+        <th style="background:#f0f0f0;padding:8px 6px;border:1px solid #999;font-size:11px;text-align:center">% DONE</th>
+        <th style="background:#f0f0f0;padding:8px 6px;border:1px solid #999;font-size:11px">REMARKS</th>
+      </tr></thead>
+      <tbody id="sActBody"></tbody>
+    </table>
+    <div style="margin-top:14px;font-size:12px"><b>ACCOMPLISHMENTS:</b><div id="sAccList" style="margin-top:8px"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:40px;font-size:12px">
+      <div style="text-align:center;width:42%"><div style="border-top:1px solid #000;padding-top:6px;margin-top:30px">Prepared by / Foreman</div></div>
+      <div style="text-align:center;width:42%"><div style="border-top:1px solid #000;padding-top:6px;margin-top:30px">Noted by / Engineer / PM</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ RECEIPTS ══════════════ -->
+<div class="screen" id="screen-receipts">
+  <div class="sh">
+    RECEIPTS
+    <button class="btn btn-sm btn-o" onclick="openModal('rcModal')">+ Add</button>
+  </div>
+  <div id="rcTotalBar" class="rc-total-bar">
+    <div>
+      <div class="rc-total-label">Total Spent</div>
+      <div class="rc-total-amt" id="rcTotal">₱0</div>
+      <div class="rc-unsub-amt" id="rcUnsubAmt"></div>
+    </div>
+    <button class="btn btn-sm btn-o" style="font-size:11px" onclick="copyReceipts()">📋 Copy List</button>
+  </div>
+  <div class="todo-filter-bar">
+    <button class="tf active" onclick="setRcFilter('all',this)">All</button>
+    <button class="tf" onclick="setRcFilter('unsubmitted',this)">⚠ Pending</button>
+    <button class="tf" onclick="setRcFilter('submitted',this)">✓ Submitted</button>
+    <button class="tf" onclick="setRcFilter('materials',this)">Materials</button>
+    <button class="tf" onclick="setRcFilter('labor',this)">Labor</button>
+    <button class="tf" onclick="setRcFilter('equipment',this)">Equipment</button>
+    <button class="tf" onclick="setRcFilter('transport',this)">Transport</button>
+    <button class="tf" onclick="setRcFilter('office',this)">Office</button>
+  </div>
+  <div id="rcList"><div class="empty"><div class="empty-ic">🧾</div>No receipts yet.</div></div>
+</div>
+
+<!-- ══════════════ TO-DO ══════════════ -->
+<div class="screen" id="screen-todos">
+  <div class="sh">
+    TO-DO
+    <button class="btn btn-sm btn-o" onclick="openModal('todoModal')">+ Add</button>
+  </div>
+  <!-- filter bar -->
+  <div class="todo-filter-bar">
+    <button class="tf active" onclick="setTodoFilter('all',this)">All</button>
+    <button class="tf" onclick="setTodoFilter('today',this)">📅 Today</button>
+    <button class="tf" onclick="setTodoFilter('tomorrow',this)">➡ Tomorrow</button>
+    <button class="tf" onclick="setTodoFilter('pending',this)">⏳ Pending</button>
+    <button class="tf" onclick="setTodoFilter('done',this)">✓ Done</button>
+    <button class="tf" onclick="setTodoFilter('urgent',this)">🔴 Urgent</button>
+  </div>
+  <div id="todoList"><div class="empty"><div class="empty-ic">✅</div>No tasks yet.</div></div>
+  <div style="margin-top:8px">
+    <button class="btn btn-o" onclick="clearDoneTodos()">🗑 Clear completed tasks</button>
+  </div>
+</div>
+
+
+<!-- ══ MODAL: Add Receipt ══ -->
+<div class="mo" id="rcModal">
+  <div class="md">
+    <div class="md-title">ADD RECEIPT <button class="mc" onclick="closeModal('rcModal')">✕</button></div>
+    <input class="f" id="rcDesc" placeholder="What was purchased / paid for? *" />
+    <input class="f" id="rcAmount" placeholder="Amount (₱) *" type="number" min="0" />
+    <div class="row2">
+      <select class="f" id="rcCat" style="margin-bottom:0">
+        <option value="materials">Materials</option>
+        <option value="labor">Labor / Manpower</option>
+        <option value="equipment">Equipment / Tools</option>
+        <option value="transport">Transport / Delivery</option>
+        <option value="office">Office / Admin</option>
+        <option value="other">Other</option>
+      </select>
+      <input class="f" id="rcSupplier" placeholder="Supplier / payee" style="margin-bottom:0" />
+    </div>
+    <input class="f" id="rcRef" placeholder="OR / Invoice No. (optional)" />
+    <textarea class="f" id="rcNote" placeholder="Notes (optional)" style="min-height:56px"></textarea>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <input type="checkbox" id="rcSubmitted" style="width:18px;height:18px;cursor:pointer;accent-color:var(--orange)" />
+      <label for="rcSubmitted" style="font-family:var(--fm);font-size:12px;color:var(--muted);cursor:pointer">Already submitted to office</label>
+    </div>
+    <button class="btn" onclick="addReceipt()">+ SAVE RECEIPT</button>
+  </div>
+</div>
+
+<!-- ══ MODAL: Add To-Do ══ -->
+<div class="mo" id="todoModal">
+  <div class="md">
+    <div class="md-title">ADD TASK <button class="mc" onclick="closeModal('todoModal')">✕</button></div>
+    <input class="f" id="tdText" placeholder="What needs to be done? *" />
+    <textarea class="f" id="tdNote" placeholder="Details / notes (optional)" style="min-height:56px"></textarea>
+    <div class="row2">
+      <select class="f" id="tdDue" style="margin-bottom:0">
+        <option value="today">📅 Today</option>
+        <option value="tomorrow" selected>➡ Tomorrow</option>
+        <option value="this-week">📆 This week</option>
+        <option value="asap">🔥 ASAP</option>
+        <option value="someday">🗓 Someday</option>
+      </select>
+      <select class="f" id="tdPri" style="margin-bottom:0">
+        <option value="normal">Normal</option>
+        <option value="urgent">🔴 Urgent</option>
+        <option value="low">⬇ Low</option>
+      </select>
+    </div>
+    <button class="btn" onclick="addTodo()">+ ADD TASK</button>
+  </div>
+</div>
+
+<!-- ══ MODAL: New Project ══ -->
+<div class="mo" id="newProjModal">
+  <div class="md">
+    <div class="md-title">NEW PROJECT <button class="mc" onclick="closeModal('newProjModal')">✕</button></div>
+    <input class="f" id="npName" placeholder="Project name *" />
+    <input class="f" id="npLoc" placeholder="Location / address" />
+    <input class="f" id="npForeman" placeholder="Foreman / supervisor name" />
+    <select class="f" id="npIcon">
+      <option value="🏗">🏗 Building / Structure</option>
+      <option value="🏠">🏠 Residential</option>
+      <option value="🏢">🏢 Commercial</option>
+      <option value="🛣">🛣 Road / Civil</option>
+      <option value="🔌">🔌 Electrical</option>
+      <option value="🪠">🪠 Plumbing</option>
+      <option value="🏭">🏭 Industrial</option>
+    </select>
+    <button class="btn" onclick="addProject()">+ CREATE PROJECT</button>
+  </div>
+</div>
+
+<!-- ══ MODAL: Add Worker ══ -->
+<div class="mo" id="wkModal">
+  <div class="md">
+    <div class="md-title">ADD WORKER <button class="mc" onclick="closeModal('wkModal')">✕</button></div>
+    <input class="f" id="wName" placeholder="Full name *" />
+    <input class="f" id="wRole" placeholder="Role / trade (e.g. Mason, Carpenter)" />
+    <input class="f" id="wRate" placeholder="Daily rate (₱) e.g. 650" type="number" min="0" />
+    <button class="btn" onclick="addWorker()">+ ADD WORKER</button>
+  </div>
+</div>
+
+<!-- ══ MODAL: Add Activity ══ -->
+<div class="mo" id="actModal">
+  <div class="md">
+    <div class="md-title">LOG ACTIVITY <button class="mc" onclick="closeModal('actModal')">✕</button></div>
+    <input class="f" id="actName" placeholder="Activity / work description *" />
+    <input class="f" id="actArea" placeholder="Area / location on site" />
+    <div class="row2">
+      <select class="f" id="actStatus" style="margin-bottom:0">
+        <option value="ongoing">Ongoing</option>
+        <option value="done">Done</option>
+        <option value="delayed">Delayed</option>
+      </select>
+      <input class="f" id="actPct" placeholder="% complete" type="number" min="0" max="100" style="margin-bottom:0" />
+    </div>
+    <input class="f" id="actWk" placeholder="No. of workers" type="number" min="0" />
+    <textarea class="f" id="actNotes" placeholder="Remarks / notes (optional)"></textarea>
+    <button class="btn" onclick="addActivity()">+ LOG ACTIVITY</button>
+  </div>
+</div>
+
+<!-- ══ MODAL: Add Accomplishment ══ -->
+<div class="mo" id="accModal">
+  <div class="md">
+    <div class="md-title">RECORD ACCOMPL. <button class="mc" onclick="closeModal('accModal')">✕</button></div>
+    <input class="f" id="accTitle" placeholder="What was accomplished? *" />
+    <textarea class="f" id="accDesc" placeholder="Details — quantity, measurements, area covered…"></textarea>
+    <div class="row2">
+      <select class="f" id="accCat" style="margin-bottom:0">
+        <option value="structural">Structural</option>
+        <option value="finishing">Finishing</option>
+        <option value="electrical">Electrical</option>
+        <option value="plumbing">Plumbing</option>
+        <option value="civil">Civil</option>
+        <option value="other">Other</option>
+      </select>
+      <input class="f" id="accPct" placeholder="% complete" type="number" min="0" max="100" style="margin-bottom:0" />
+    </div>
+    <button class="btn" onclick="addAccomplishment()">+ RECORD</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════
+// STATE — multi-project
+// Each project: { id, name, loc, foreman, icon, workers:[], attendance:{}, activities:[], accomplishments:[] }
+// ════════════════════════════════════════════════
+let DB = JSON.parse(localStorage.getItem('sf4')||'null') || { projects:[], todos:[] };
+// migrate old data that may not have todos
+if(!DB.todos) DB.todos=[];
+let PID = null;
+let rcFilter='all', todoFilter='all';
+
+function save(){ localStorage.setItem('sf4', JSON.stringify(DB)); }
+function proj(){ return DB.projects.find(p=>p.id===PID); }
+function todayKey(){ return new Date().toISOString().slice(0,10); }
+
+// ── CLOCK ──────────────────────────────────────
+function tick(){
+  const n=new Date(), D=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('hTime').textContent=n.toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('hDate').textContent=`${D[n.getDay()]} ${n.getDate()} ${M[n.getMonth()]} ${n.getFullYear()}`;
+}
+setInterval(tick,1000); tick();
+
+// ── WEATHER ────────────────────────────────────
+async function fetchWeather(){
+  try{
+    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=17.15&longitude=121.89&current_weather=true');
+    const d=await r.json(); const w=d.current_weather;
+    const icons={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',51:'🌦',61:'🌧',80:'🌧',95:'⛈'};
+    const descs={0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',51:'Drizzle',61:'Rain',80:'Rain showers',95:'Thunderstorm'};
+    document.getElementById('wIcon').textContent=icons[w.weathercode]||'🌡';
+    document.getElementById('wTemp').textContent=Math.round(w.temperature)+'°C';
+    document.getElementById('wDesc').textContent=descs[w.weathercode]||'Weather data';
+    const h=document.getElementById('wHaz');
+    if([95].includes(w.weathercode)){h.textContent='HIGH RISK';h.className='haz haz-hi';}
+    else if([61,80,51].includes(w.weathercode)){h.textContent='MOD RISK';h.className='haz haz-mid';}
+    else{h.textContent='LOW RISK';h.className='haz haz-low';}
+  }catch(e){document.getElementById('wDesc').textContent='Unavailable';}
+}
+fetchWeather();
+
+// ── MODALS ─────────────────────────────────────
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+// ── TOAST ──────────────────────────────────────
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ── HELPERS ────────────────────────────────────
+function esc(t){return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtDate(d){
+  const dt=new Date(d+'T00:00:00'), D=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${D[dt.getDay()]} ${dt.getDate()} ${M[dt.getMonth()]} ${dt.getFullYear()}`;
+}
+function pctCls(p){return p>=75?'pb-hi':p>=40?'pb-mi':'pb-lo';}
+
+// ════════════════════════════════════════════════
+// HOME / PROJECT LIST
+// ════════════════════════════════════════════════
+function goHome(){
+  PID=null;
+  document.getElementById('btnBack').style.display='none';
+  document.getElementById('projBanner').style.display='none';
+  document.getElementById('projNav').style.display='none';
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-home').classList.add('active');
+  renderProjects();
+}
+
+function renderProjects(){
+  const el=document.getElementById('projList');
+  if(!DB.projects.length){
+    el.innerHTML='<div class="empty"><div class="empty-ic">🏗</div>No projects yet.<br>Tap "+ New" to add your first project.</div>';
+    return;
+  }
+  const today=todayKey();
+  el.innerHTML=DB.projects.map(p=>{
+    const present=p.workers.filter(w=>p.attendance[today+':'+w.id]==='present').length;
+    const half=p.workers.filter(w=>p.attendance[today+':'+w.id]==='half').length;
+    const todayActs=p.activities.filter(a=>a.date===today);
+    const overall=todayActs.length?Math.round(todayActs.reduce((s,a)=>s+(a.pct||0),0)/todayActs.length):0;
+    const bgColors=['#2a1e12','#12271e','#1a1a2a','#2a1a1a','#1a2a2a'];
+    const bgIdx=DB.projects.indexOf(p)%bgColors.length;
+    return `<div class="proj-card" onclick="openProject(${p.id})">
+      <div class="proj-icon" style="background:${bgColors[bgIdx]}">${p.icon||'🏗'}</div>
+      <div class="proj-info">
+        <div class="proj-name">${esc(p.name)}</div>
+        <div class="proj-loc">${p.loc?'📍 '+esc(p.loc):''}</div>
+        <div class="proj-stats">
+          <div class="proj-stat">👷 <span>${present+half}</span> on site</div>
+          <div class="proj-stat">⚒️ <span>${todayActs.length}</span> activities</div>
+          ${todayActs.length?`<div class="proj-stat">📊 <span>${overall}%</span></div>`:''}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="proj-arrow">›</div>
+        <button class="proj-delete" onclick="deleteProject(event,${p.id})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addProject(){
+  const name=document.getElementById('npName').value.trim();
+  if(!name){toast('Enter project name');return;}
+  DB.projects.push({
+    id:Date.now(), name, icon:document.getElementById('npIcon').value,
+    loc:document.getElementById('npLoc').value.trim(),
+    foreman:document.getElementById('npForeman').value.trim(),
+    workers:[], attendance:{}, activities:[], accomplishments:[], receipts:[]
+  });
+  save();
+  ['npName','npLoc','npForeman'].forEach(id=>document.getElementById(id).value='');
+  closeModal('newProjModal');
+  renderProjects();
+  toast('✅ Project created!');
+}
+
+function deleteProject(e,id){
+  e.stopPropagation();
+  if(!confirm('Delete this project and all its data?')) return;
+  DB.projects=DB.projects.filter(p=>p.id!==id);
+  save(); renderProjects(); toast('Project deleted');
+}
+
+function openProject(id){
+  PID=id;
+  const p=proj();
+  document.getElementById('btnBack').style.display='';
+  document.getElementById('projBanner').style.display='';
+  document.getElementById('projBannerName').textContent=p.name;
+  document.getElementById('projNav').style.display='flex';
+  go('dash');
+}
+
+// ════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  ({dash:renderDash,attendance:renderAttendance,activities:renderActivities,
+    accomplishments:renderAccomplishments,summary:renderSummary,
+    receipts:renderReceipts,todos:renderTodos})[id]?.();
+}
+
+// ════════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════════
+function renderDash(){
+  const p=proj(); if(!p) return;
+  // load proj info fields
+  document.getElementById('piName').value=p.name||'';
+  document.getElementById('piLoc').value=p.loc||'';
+  document.getElementById('piForeman').value=p.foreman||'';
+  const today=todayKey();
+  const present=p.workers.filter(w=>p.attendance[today+':'+w.id]==='present').length;
+  const half=p.workers.filter(w=>p.attendance[today+':'+w.id]==='half').length;
+  const todayActs=p.activities.filter(a=>a.date===today);
+  const todayAcc=p.accomplishments.filter(a=>a.date===today);
+  document.getElementById('dPresent').textContent=present+half;
+  document.getElementById('dAct').textContent=todayActs.length;
+  document.getElementById('dAcc').textContent=todayAcc.length;
+  let lines=[];
+  if(p.workers.length){
+    const absent=p.workers.filter(w=>p.attendance[today+':'+w.id]==='absent').length;
+    const unmarked=p.workers.filter(w=>!p.attendance[today+':'+w.id]).length;
+    lines.push(`👷 <b>${present}</b> present · <b>${half}</b> half · <b>${absent}</b> absent${unmarked?` · ${unmarked} unmarked`:''}`);
+  }
+  if(todayActs.length){
+    const done=todayActs.filter(a=>a.status==='done').length;
+    const delayed=todayActs.filter(a=>a.status==='delayed').length;
+    const ongoing=todayActs.filter(a=>a.status==='ongoing').length;
+    lines.push(`⚒️ <b>${todayActs.length}</b> activities — ${ongoing} ongoing, ${done} done, ${delayed} delayed`);
+    const overall=Math.round(todayActs.reduce((s,a)=>s+(a.pct||0),0)/todayActs.length);
+    lines.push(`📊 Overall progress: <b>${overall}%</b>`);
+  }
+  if(todayAcc.length){
+    lines.push(`🏆 <b>${todayAcc.length}</b> accomplishment${todayAcc.length>1?'s':''} today:`);
+    todayAcc.forEach(a=>lines.push(`&nbsp;&nbsp;• ${esc(a.title)}`));
+  }
+  // receipts today
+  if(p.receipts){
+    const todayRc=p.receipts.filter(r=>r.date===today);
+    const unsubRc=p.receipts.filter(r=>!r.submitted);
+    if(todayRc.length){
+      const rcTotal=todayRc.reduce((s,r)=>s+r.amount,0);
+      lines.push(`🧾 <b>${todayRc.length}</b> receipt${todayRc.length>1?'s':''} today — ₱${rcTotal.toLocaleString()}`);
+    }
+    if(unsubRc.length) lines.push(`⚠ <b>${unsubRc.length}</b> receipt${unsubRc.length>1?'s':''} pending office submission`);
+  }
+  // todos
+  const pendingTodos=DB.todos.filter(t=>t.projId===PID&&!t.done);
+  const urgentTodos=pendingTodos.filter(t=>t.pri==='urgent');
+  if(pendingTodos.length) lines.push(`✅ <b>${pendingTodos.length}</b> task${pendingTodos.length>1?'s':''} pending${urgentTodos.length?` — <span style="color:var(--red)">🔴 ${urgentTodos.length} urgent</span>`:''}`);
+  document.getElementById('dashSum').innerHTML=lines.length?lines.join('<br>'):'No data yet for today.';
+}
+
+function saveProjInfo(){
+  const p=proj(); if(!p) return;
+  p.name=document.getElementById('piName').value;
+  p.loc=document.getElementById('piLoc').value;
+  p.foreman=document.getElementById('piForeman').value;
+  document.getElementById('projBannerName').textContent=p.name;
+  save();
+}
+
+// ════════════════════════════════════════════════
+// ════════════════════════════════════════════════
+// ATTENDANCE — WEEKLY PAYROLL (Sat–Fri)
+// ════════════════════════════════════════════════
+
+// weekOffset: 0 = current week, -1 = last week, etc.
+let weekOffset = 0;
+
+// Returns the Saturday that starts the payroll week containing the given date
+function getWeekSat(offset){
+  const today = new Date();
+  // day of week: 0=Sun,1=Mon,...,6=Sat
+  const dow = today.getDay();
+  // days since last Saturday (Sat=6 → 0 back, Sun=0 → 1 back, Mon=1 → 2 back ... Fri=5 → 6 back)
+  const daysBack = dow === 6 ? 0 : dow + 1;
+  const sat = new Date(today);
+  sat.setDate(today.getDate() - daysBack + (offset * 7));
+  sat.setHours(0,0,0,0);
+  return sat;
+}
+
+function weekDates(offset){
+  const sat = getWeekSat(offset);
+  return Array.from({length:6}, (_,i)=>{
+    const d = new Date(sat);
+    d.setDate(sat.getDate() + [0,2,3,4,5,6][i]); // Sat,Mon,Tue,Wed,Thu,Fri
+    return d;
+  });
+}
+
+function dateKey(d){ return d.toISOString().slice(0,10); }
+
+function shiftWeek(dir){
+  weekOffset += dir;
+  renderAttendance();
+}
+
+function addWorker(){
+  const p=proj(); if(!p) return;
+  const name=document.getElementById('wName').value.trim();
+  const role=document.getElementById('wRole').value.trim();
+  const rate=parseFloat(document.getElementById('wRate').value)||0;
+  if(!name){toast('Enter worker name');return;}
+  p.workers.push({id:Date.now(),name,role:role||'Worker',rate,addedDate:todayKey()});
+  save();
+  ['wName','wRole','wRate'].forEach(id=>document.getElementById(id).value='');
+  closeModal('wkModal'); renderAttendance(); toast('✅ Worker added');
+}
+
+function setAtt(wid,dayKey){
+  const p=proj(); if(!p) return;
+  const key=dayKey+':'+wid;
+  // cycle: none → present → half → absent → none
+  const cur=p.attendance[key]||'none';
+  const next={none:'present',present:'half',half:'absent',absent:'none'}[cur];
+  if(next==='none') delete p.attendance[key];
+  else p.attendance[key]=next;
+  save(); renderAttendance();
+}
+
+function deleteWorker(wid){
+  const p=proj(); if(!p) return;
+  if(!confirm('Remove this worker?')) return;
+  p.workers=p.workers.filter(w=>w.id!==wid);
+  save(); renderAttendance(); toast('Worker removed');
+}
+
+const DAY_NAMES=['SAT','MON','TUE','WED','THU','FRI'];
+const DAY_NAMES_FULL=['Saturday','Monday','Tuesday','Wednesday','Thursday','Friday'];
+
+function renderAttendance(){
+  const p=proj(); if(!p) return;
+  const dates=weekDates(weekOffset);
+  const keys=dates.map(dateKey);
+  const today=todayKey();
+
+  // Week label
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const s=dates[0], e=dates[5];
+  document.getElementById('weekLabel').textContent=
+    `${s.getDate()} ${months[s.getMonth()]} – ${e.getDate()} ${months[e.getMonth()]} ${e.getFullYear()}`;
+
+  // Day pills — quick summary per day
+  const pillsEl=document.getElementById('dayPills');
+  pillsEl.innerHTML=dates.map((d,i)=>{
+    const dk=keys[i];
+    const isToday=dk===today;
+    const cnt=p.workers.filter(w=>p.attendance[dk+':'+w.id]==='present'||p.attendance[dk+':'+w.id]==='half').length;
+    return `<div style="min-width:52px;background:${isToday?'var(--orange)':'var(--dark3)'};border:1px solid ${isToday?'var(--orange)':'var(--mid)'};border-radius:8px;padding:6px 4px;text-align:center;cursor:pointer" onclick="jumpDay('${dk}')">
+      <div style="font-family:var(--fm);font-size:9px;color:${isToday?'#fff':'var(--muted)'};text-transform:uppercase">${DAY_NAMES[i]}</div>
+      <div style="font-family:var(--fd);font-size:18px;color:${isToday?'#fff':'var(--yellow)'};line-height:1.2">${d.getDate()}</div>
+      <div style="font-family:var(--fm);font-size:9px;color:${isToday?'#fff':'var(--muted)'}">${cnt?cnt+'👷':'—'}</div>
+    </div>`;
+  }).join('');
+
+  // Worker list — tap day columns to mark attendance
+  const list=document.getElementById('wkList');
+  if(!p.workers.length){
+    list.innerHTML='<div class="empty"><div class="empty-ic">👷</div>No workers yet. Tap "+ Worker".</div>';
+    document.getElementById('dPresent').textContent=0;
+    return;
+  }
+
+  // Count today present
+  const todayPresent=p.workers.filter(w=>{
+    const a=p.attendance[today+':'+w.id];
+    return a==='present'||a==='half';
+  }).length;
+  document.getElementById('dPresent').textContent=todayPresent;
+
+  list.innerHTML=p.workers.map(w=>{
+    const ini=w.name.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+    const rate=w.rate||0;
+    // weekly salary
+    let weeklySalary=0;
+    const dayCells=dates.map((d,i)=>{
+      const dk=keys[i];
+      const att=p.attendance[dk+':'+w.id]||'none';
+      const pay=att==='present'?rate:att==='half'?rate/2:0;
+      weeklySalary+=pay;
+      const isToday=dk===today;
+      const icon=att==='present'?'✓':att==='half'?'½':att==='absent'?'✗':'·';
+      const bg=att==='present'?'#1a3d2a':att==='half'?'#3d2a1a':att==='absent'?'#3d1a1a':isToday?'#2a2010':'var(--dark3)';
+      const col=att==='present'?'var(--green)':att==='half'?'var(--orange)':att==='absent'?'var(--red)':'var(--muted)';
+      return `<button onclick="setAtt(${w.id},'${dk}')" style="width:36px;height:36px;border-radius:6px;border:1px solid ${isToday?'var(--orange)':'var(--mid)'};background:${bg};color:${col};font-family:var(--fm);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center">${icon}</button>`;
+    }).join('');
+    return `<div style="padding:10px 0;border-bottom:1px solid var(--dark3)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <div class="wav">${ini}</div>
+        <div class="wi">
+          <div class="wn">${esc(w.name)}</div>
+          <div class="wrl">${esc(w.role)}${rate?' · ₱'+rate.toLocaleString()+'/day':''}</div>
+        </div>
+        <div style="font-family:var(--fm);font-size:11px;color:var(--yellow);font-weight:700;text-align:right">
+          ${weeklySalary>0?'₱'+weeklySalary.toLocaleString():''}
+        </div>
+        <button class="del-btn" onclick="deleteWorker(${w.id})">🗑</button>
+      </div>
+      <div style="display:flex;gap:4px;justify-content:space-between">
+        ${dayCells}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function jumpDay(dk){
+  // highlight or just a visual cue — already shown in pills
+  toast('Tap each day button to mark attendance');
+}
+
+function printWeeklyPayroll(){
+  const p=proj(); if(!p) return;
+  const dates=weekDates(weekOffset);
+  const keys=dates.map(dateKey);
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const s=dates[0], e=dates[5];
+  const weekRange=`${s.getDate()}/${s.getMonth()+1}/${s.getFullYear()} – ${e.getDate()}/${e.getMonth()+1}/${e.getFullYear()}`;
+
+  // header fields
+  document.getElementById('pwProjName').textContent=p.name||'';
+  document.getElementById('pwProjLoc').textContent=p.loc||'';
+  document.getElementById('pwCharge').textContent=p.name||'';
+  document.getElementById('pwDate').textContent=`${e.getDate()}/${e.getMonth()+1}/${e.getFullYear()}`;
+
+  // Particulars = week activities collapsed
+  const allActs=[...new Set(
+    p.activities
+      .filter(a=>keys.includes(a.date))
+      .map(a=>a.name)
+  )].join(', ');
+  document.getElementById('pwParticulars').textContent=weekRange;
+  document.getElementById('pwActivities').textContent=allActs||'—';
+
+  // Build table header: #, NAME, SAT date, MON date, ... FRI date, No. of Days, Daily Rate, SALARY
+  const th=v=>`<th style="border:1px solid #666;padding:5px 4px;background:#e8e8e8;font-size:9px;text-align:center;white-space:nowrap">${v}</th>`;
+  document.getElementById('pwHead').innerHTML=`<tr>
+    ${th('#')}${th('N A M E')}
+    ${dates.map((d,i)=>`${th(DAY_NAMES_FULL[i])}<tr style="display:none"></tr>`).map((x,i)=>th(`${DAY_NAMES[i]}<br>${dates[i].getDate()}/${dates[i].getMonth()+1}`)).join('')}
+    ${th('No. of<br>Days')}${th('Daily<br>Rate')}${th('SALARY')}${th('SIGNATURE')}
+  </tr>`;
+
+  // Rows
+  let grandTotal=0;
+  const rows=p.workers.map((w,i)=>{
+    const rate=w.rate||0;
+    let days=0, salary=0;
+    const dayCols=dates.map((_,di)=>{
+      const dk=keys[di];
+      const att=p.attendance[dk+':'+w.id]||'none';
+      let val='';
+      if(att==='present'){ val=rate.toLocaleString(); days+=1; salary+=rate; }
+      else if(att==='half'){ val=(rate/2).toLocaleString(); days+=0.5; salary+=rate/2; }
+      // absent or none = blank
+      return `<td style="border:1px solid #ccc;padding:5px 4px;text-align:right;font-size:10px">${val}</td>`;
+    }).join('');
+    grandTotal+=salary;
+    return `<tr>
+      <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-size:10px">${i+1}</td>
+      <td style="border:1px solid #ccc;padding:5px 8px;font-size:10px;font-weight:600">${esc(w.name)}</td>
+      ${dayCols}
+      <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-size:10px;font-weight:700">${days}</td>
+      <td style="border:1px solid #ccc;padding:5px 4px;text-align:right;font-size:10px">${rate?rate.toLocaleString():''}</td>
+      <td style="border:1px solid #ccc;padding:5px 4px;text-align:right;font-size:10px;font-weight:700">${salary?salary.toLocaleString():''}</td>
+      <td style="border:1px solid #ccc;padding:5px 4px;min-width:60px"></td>
+    </tr>`;
+  });
+
+  // Fill blank rows to minimum 10
+  const blankRow=`<tr>${['','','','','','','','','',''].map((_,i)=>
+    `<td style="border:1px solid #ccc;padding:5px 4px">${i===0?'&nbsp;':''}</td>`).join('')}</tr>`;
+  while(rows.length<10) rows.push(`<tr>
+    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-size:10px">${rows.length+1}</td>
+    <td style="border:1px solid #ccc;padding:5px 4px">-</td>
+    ${dates.map(()=>'<td style="border:1px solid #ccc;padding:5px 4px"></td>').join('')}
+    <td style="border:1px solid #ccc;padding:5px 4px"></td>
+    <td style="border:1px solid #ccc;padding:5px 4px"></td>
+    <td style="border:1px solid #ccc;padding:5px 4px"></td>
+    <td style="border:1px solid #ccc;padding:5px 4px"></td>
+  </tr>`);
+
+  document.getElementById('pwBody').innerHTML=rows.join('');
+  document.getElementById('pwFoot').innerHTML='';
+  document.getElementById('pwTotal').textContent='₱'+grandTotal.toLocaleString();
+  window.print();
+}
+
+// ════════════════════════════════════════════════
+// ACTIVITIES
+// ════════════════════════════════════════════════
+function addActivity(){
+  const p=proj(); if(!p) return;
+  const name=document.getElementById('actName').value.trim();
+  if(!name){toast('Enter activity description');return;}
+  p.activities.push({
+    id:Date.now(), date:todayKey(), name,
+    area:document.getElementById('actArea').value.trim(),
+    status:document.getElementById('actStatus').value,
+    pct:parseInt(document.getElementById('actPct').value)||0,
+    workers:document.getElementById('actWk').value||'',
+    notes:document.getElementById('actNotes').value.trim()
+  });
+  save();
+  ['actName','actArea','actPct','actWk','actNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('actStatus').value='ongoing';
+  closeModal('actModal'); renderActivities();
+  document.getElementById('dAct').textContent=p.activities.filter(a=>a.date===todayKey()).length;
+  toast('✅ Activity logged');
+}
+
+function deleteActivity(id){
+  const p=proj(); if(!p) return;
+  p.activities=p.activities.filter(a=>a.id!==id);
+  save(); renderActivities();
+  document.getElementById('dAct').textContent=p.activities.filter(a=>a.date===todayKey()).length;
+  toast('Removed');
+}
+
+function renderActivities(){
+  const p=proj(); if(!p) return;
+  const filter=document.getElementById('actFilter').value;
+  const today=todayKey();
+  let acts=[...p.activities].filter(a=>a.date===today);
+  if(filter!=='all') acts=acts.filter(a=>a.status===filter);
+  acts.reverse();
+  const list=document.getElementById('actList');
+  if(!acts.length){list.innerHTML='<div class="empty"><div class="empty-ic">⚒️</div>No activities for today yet.</div>';return;}
+  list.innerHTML=acts.map(a=>{
+    const pct=a.pct||0;
+    return `<div class="ai ${a.status}">
+      <div class="ai-hdr">
+        <div class="ai-name">${esc(a.name)}</div>
+        <div class="sb2 bg-${a.status}">${a.status}</div>
+      </div>
+      ${a.area?`<div class="ai-area">📍 ${esc(a.area)}</div>`:''}
+      ${a.notes?`<div class="ai-notes">${esc(a.notes)}</div>`:''}
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+        <div class="pw" style="flex:1"><div class="pb ${pctCls(pct)}" style="width:${pct}%"></div></div>
+        <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--yellow);min-width:36px;text-align:right">${pct}%</div>
+      </div>
+      <div class="ai-foot">
+        <div class="ai-wk">${a.workers?`👷 ${a.workers} worker${a.workers>1?'s':''}`:''}</div>
+        <button class="del-btn" onclick="deleteActivity(${a.id})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// ACCOMPLISHMENTS
+// ════════════════════════════════════════════════
+function addAccomplishment(){
+  const p=proj(); if(!p) return;
+  const title=document.getElementById('accTitle').value.trim();
+  if(!title){toast('Enter accomplishment');return;}
+  p.accomplishments.push({
+    id:Date.now(), date:todayKey(), title,
+    desc:document.getElementById('accDesc').value.trim(),
+    cat:document.getElementById('accCat').value,
+    pct:document.getElementById('accPct').value
+  });
+  save();
+  ['accTitle','accDesc','accPct'].forEach(id=>document.getElementById(id).value='');
+  closeModal('accModal'); renderAccomplishments();
+  document.getElementById('dAcc').textContent=p.accomplishments.filter(a=>a.date===todayKey()).length;
+  toast('🏆 Recorded!');
+}
+
+function deleteAccomplishment(id){
+  const p=proj(); if(!p) return;
+  p.accomplishments=p.accomplishments.filter(a=>a.id!==id);
+  save(); renderAccomplishments();
+  document.getElementById('dAcc').textContent=p.accomplishments.filter(a=>a.date===todayKey()).length;
+  toast('Removed');
+}
+
+function renderAccomplishments(){
+  const p=proj(); if(!p) return;
+  const byDate={};
+  [...p.accomplishments].reverse().forEach(a=>{
+    if(!byDate[a.date]) byDate[a.date]=[];
+    byDate[a.date].push(a);
+  });
+  const list=document.getElementById('accList');
+  if(!p.accomplishments.length){list.innerHTML='<div class="empty"><div class="empty-ic">🏆</div>No accomplishments yet.</div>';return;}
+  list.innerHTML=Object.entries(byDate).map(([date,items])=>`
+    <div class="dgl">📅 ${fmtDate(date)}${date===todayKey()?' · TODAY':''}</div>
+    ${items.map(a=>`<div class="ac-item">
+      <div class="ac-hdr">
+        <div class="ac-title">${esc(a.title)}</div>
+        <button class="del-btn" onclick="deleteAccomplishment(${a.id})">🗑</button>
+      </div>
+      ${a.desc?`<div class="ac-desc">${esc(a.desc)}</div>`:''}
+      <div class="ac-meta">
+        <span class="ac-tag ${a.cat}">${a.cat}</span>
+        ${a.pct?`<span class="ac-pct">${a.pct}% complete</span>`:''}
+      </div>
+    </div>`).join('')}
+  `).join('');
+}
+
+// ════════════════════════════════════════════════
+// SUMMARY
+// ════════════════════════════════════════════════
+function renderSummary(){
+  const p=proj(); if(!p) return;
+  const today=todayKey();
+  const todayActs=p.activities.filter(a=>a.date===today);
+  const todayAcc=p.accomplishments.filter(a=>a.date===today);
+  const overall=todayActs.length?Math.round(todayActs.reduce((s,a)=>s+(a.pct||0),0)/todayActs.length):0;
+  let html='';
+  html+=`<div class="card" style="text-align:center;padding:18px 14px">
+    <div class="ct" style="text-align:left">📊 Overall Progress Today</div>
+    <div class="ov-pct">${overall}%</div>
+    <div class="ov-lbl">${todayActs.length} activit${todayActs.length===1?'y':'ies'}</div>
+    <div class="ov-pw"><div class="ov-pb" style="width:${overall}%"></div></div>
+    <div style="display:flex;justify-content:space-around;font-family:var(--fm);font-size:11px">
+      <span style="color:var(--green)">✓ ${todayActs.filter(a=>a.status==='done').length} Done</span>
+      <span style="color:var(--blue)">⟳ ${todayActs.filter(a=>a.status==='ongoing').length} Ongoing</span>
+      <span style="color:var(--red)">! ${todayActs.filter(a=>a.status==='delayed').length} Delayed</span>
+    </div>
+  </div>`;
+  if(todayActs.length){
+    html+=`<div class="card"><div class="ct">⚒️ Activities Breakdown</div>`;
+    todayActs.forEach(a=>{
+      const pct=a.pct||0;
+      html+=`<div class="sum-row">
+        <div>
+          <div class="sum-name">${esc(a.name)}</div>
+          ${a.area?`<div class="sum-area">📍 ${esc(a.area)}</div>`:''}
+          <div class="pw" style="margin-top:6px"><div class="pb ${pctCls(pct)}" style="width:${pct}%"></div></div>
+        </div>
+        <div><div class="sum-pn">${pct}%</div><div class="sum-ps">complete</div></div>
+        <div><span class="sb2 bg-${a.status}">${a.status}</span></div>
+      </div>`;
+    });
+    html+=`</div>`;
+  } else {
+    html+=`<div class="empty"><div class="empty-ic">⚒️</div>No activities logged today.</div>`;
+  }
+  if(todayAcc.length){
+    html+=`<div class="card"><div class="ct">🏆 Accomplishments Today</div>`;
+    todayAcc.forEach(a=>{
+      html+=`<div style="padding:8px 0;border-bottom:1px solid var(--dark3)">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:13px;font-weight:600">${esc(a.title)}</div>
+          ${a.pct?`<div style="font-family:var(--fm);font-size:12px;color:var(--yellow);font-weight:700">${a.pct}%</div>`:''}
+        </div>
+        ${a.desc?`<div style="font-size:12px;color:var(--muted);margin-top:3px">${esc(a.desc)}</div>`:''}
+        <span class="ac-tag ${a.cat}" style="margin-top:4px;display:inline-block">${a.cat}</span>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+  document.getElementById('sumContent').innerHTML=html||'<div class="empty"><div class="empty-ic">📊</div>No data yet for today.</div>';
+}
+
+function printSum(){
+  const p=proj(); if(!p) return;
+  const today=todayKey();
+  const todayActs=p.activities.filter(a=>a.date===today);
+  const todayAcc=p.accomplishments.filter(a=>a.date===today);
+  const overall=todayActs.length?Math.round(todayActs.reduce((s,a)=>s+(a.pct||0),0)/todayActs.length):0;
+  document.getElementById('sProjName').textContent=p.name||'(Project)';
+  document.getElementById('sProjLoc').textContent=p.loc||'';
+  document.getElementById('sDate').textContent=fmtDate(today);
+  document.getElementById('sForeman').textContent=p.foreman||'—';
+  document.getElementById('sOverall').textContent=overall+'%';
+  document.getElementById('sActBody').innerHTML=todayActs.map((a,i)=>`<tr>
+    <td style="padding:8px 6px;border:1px solid #ccc;text-align:center">${i+1}</td>
+    <td style="padding:8px 6px;border:1px solid #ccc;font-weight:600">${esc(a.name)}</td>
+    <td style="padding:8px 6px;border:1px solid #ccc;font-size:11px">${esc(a.area||'—')}</td>
+    <td style="padding:8px 6px;border:1px solid #ccc;font-weight:700;font-size:11px;color:${a.status==='done'?'#166534':a.status==='delayed'?'#991b1b':'#1e40af'}">${a.status.toUpperCase()}</td>
+    <td style="padding:8px 6px;border:1px solid #ccc;text-align:center;font-weight:900">${a.pct||0}%</td>
+    <td style="padding:8px 6px;border:1px solid #ccc;font-size:11px">${esc(a.notes||'—')}</td>
+  </tr>`).join('')||`<tr><td colspan="6" style="padding:10px;text-align:center;color:#999;border:1px solid #ccc">No activities today</td></tr>`;
+  document.getElementById('sAccList').innerHTML=todayAcc.length
+    ?todayAcc.map((a,i)=>`<div style="padding:6px 0;border-bottom:1px solid #eee;font-size:12px">
+      <b>${i+1}. ${esc(a.title)}</b>${a.pct?` — <b>${a.pct}% complete</b>`:''}
+      ${a.desc?`<div style="color:#555;margin-top:2px">${esc(a.desc)}</div>`:''}
+    </div>`).join('')
+    :'<div style="color:#999;font-size:12px">No accomplishments today</div>';
+  window.print();
+}
+
+// ════════════════════════════════════════════════
+// RECEIPTS
+// ════════════════════════════════════════════════
+function addReceipt(){
+  const p=proj(); if(!p) return;
+  const desc=document.getElementById('rcDesc').value.trim();
+  const amount=parseFloat(document.getElementById('rcAmount').value)||0;
+  if(!desc){toast('Enter description');return;}
+  if(!amount){toast('Enter amount');return;}
+  if(!p.receipts) p.receipts=[];
+  p.receipts.push({
+    id:Date.now(), date:todayKey(), desc, amount,
+    cat:document.getElementById('rcCat').value,
+    supplier:document.getElementById('rcSupplier').value.trim(),
+    ref:document.getElementById('rcRef').value.trim(),
+    note:document.getElementById('rcNote').value.trim(),
+    submitted:document.getElementById('rcSubmitted').checked
+  });
+  save();
+  ['rcDesc','rcAmount','rcSupplier','rcRef','rcNote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('rcSubmitted').checked=false;
+  closeModal('rcModal'); renderReceipts(); toast('🧾 Receipt saved!');
+}
+
+function toggleSubmitted(id){
+  const p=proj(); if(!p) return;
+  const r=p.receipts.find(r=>r.id===id);
+  if(r){ r.submitted=!r.submitted; save(); renderReceipts(); }
+}
+
+function deleteReceipt(id){
+  const p=proj(); if(!p) return;
+  p.receipts=p.receipts.filter(r=>r.id!==id);
+  save(); renderReceipts(); toast('Removed');
+}
+
+function setRcFilter(f,btn){
+  rcFilter=f;
+  document.querySelectorAll('.todo-filter-bar .tf').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderReceipts();
+}
+
+function renderReceipts(){
+  const p=proj(); if(!p) return;
+  if(!p.receipts) p.receipts=[];
+  let items=[...p.receipts].reverse();
+  if(rcFilter==='unsubmitted') items=items.filter(r=>!r.submitted);
+  else if(rcFilter==='submitted') items=items.filter(r=>r.submitted);
+  else if(rcFilter!=='all') items=items.filter(r=>r.cat===rcFilter);
+
+  const total=p.receipts.reduce((s,r)=>s+r.amount,0);
+  const unsub=p.receipts.filter(r=>!r.submitted).reduce((s,r)=>s+r.amount,0);
+  document.getElementById('rcTotal').textContent='₱'+total.toLocaleString();
+  document.getElementById('rcUnsubAmt').textContent=unsub>0?`⚠ ₱${unsub.toLocaleString()} pending submission`:'';
+
+  const list=document.getElementById('rcList');
+  if(!items.length){list.innerHTML='<div class="empty"><div class="empty-ic">🧾</div>No receipts for this filter.</div>';return;}
+  list.innerHTML=items.map(r=>`
+    <div class="rc-item">
+      <div class="rc-top">
+        <div class="rc-desc">${esc(r.desc)}</div>
+        <div class="rc-amount">₱${r.amount.toLocaleString()}</div>
+      </div>
+      ${r.supplier?`<div style="font-size:12px;color:var(--muted)">🏪 ${esc(r.supplier)}</div>`:''}
+      ${r.ref?`<div style="font-family:var(--fm);font-size:10px;color:var(--muted)">OR/INV: ${esc(r.ref)}</div>`:''}
+      ${r.note?`<div class="rc-note">${esc(r.note)}</div>`:''}
+      <div class="rc-meta">
+        <span class="rc-tag ${r.cat}">${r.cat}</span>
+        <span class="rc-date">📅 ${fmtDate(r.date)}</span>
+        <span class="${r.submitted?'rc-submitted':'rc-unsubmitted'}" onclick="toggleSubmitted(${r.id})">
+          ${r.submitted?'✓ Submitted':'⚠ Not submitted'}
+        </span>
+        <button class="del-btn" style="margin-left:auto" onclick="deleteReceipt(${r.id})">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+function copyReceipts(){
+  const p=proj(); if(!p) return;
+  if(!p.receipts||!p.receipts.length){toast('No receipts to copy');return;}
+  let txt=`RECEIPTS — ${p.name}\n${'─'.repeat(30)}\n`;
+  const byDate={};
+  [...p.receipts].reverse().forEach(r=>{
+    if(!byDate[r.date]) byDate[r.date]=[];
+    byDate[r.date].push(r);
+  });
+  let total=0;
+  Object.entries(byDate).forEach(([date,items])=>{
+    txt+=`\n📅 ${fmtDate(date)}\n`;
+    items.forEach(r=>{
+      txt+=`  ${r.submitted?'[✓]':'[⚠]'} ${r.desc}`;
+      if(r.supplier) txt+=` — ${r.supplier}`;
+      if(r.ref) txt+=` (${r.ref})`;
+      txt+=` — ₱${r.amount.toLocaleString()}\n`;
+      total+=r.amount;
+    });
+  });
+  const unsub=p.receipts.filter(r=>!r.submitted).reduce((s,r)=>s+r.amount,0);
+  txt+=`\nTOTAL: ₱${total.toLocaleString()}`;
+  if(unsub>0) txt+=`\nPENDING SUBMISSION: ₱${unsub.toLocaleString()}`;
+  navigator.clipboard.writeText(txt).then(()=>toast('📋 Copied!')).catch(()=>toast('Copy failed'));
+}
+
+// ════════════════════════════════════════════════
+// TO-DO
+// ════════════════════════════════════════════════
+function addTodo(){
+  const p=proj(); if(!p) return;
+  const text=document.getElementById('tdText').value.trim();
+  if(!text){toast('Enter task');return;}
+  DB.todos.push({
+    id:Date.now(),
+    projId:PID,
+    projName:p.name,
+    text,
+    note:document.getElementById('tdNote').value.trim(),
+    due:document.getElementById('tdDue').value,
+    pri:document.getElementById('tdPri').value,
+    done:false,
+    created:todayKey()
+  });
+  save();
+  ['tdText','tdNote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('tdDue').value='tomorrow';
+  document.getElementById('tdPri').value='normal';
+  closeModal('todoModal'); renderTodos(); toast('✅ Task added!');
+}
+
+function toggleTodo(id){
+  const t=DB.todos.find(t=>t.id===id);
+  if(t){t.done=!t.done; save(); renderTodos();}
+}
+
+function deleteTodo(id){
+  DB.todos=DB.todos.filter(t=>t.id!==id);
+  save(); renderTodos(); toast('Removed');
+}
+
+function clearDoneTodos(){
+  const count=DB.todos.filter(t=>t.done&&t.projId===PID).length;
+  if(!count){toast('No completed tasks');return;}
+  DB.todos=DB.todos.filter(t=>!(t.done&&t.projId===PID));
+  save(); renderTodos(); toast(`Cleared ${count} completed task${count>1?'s':''}`);
+}
+
+function setTodoFilter(f,btn){
+  todoFilter=f;
+  document.querySelectorAll('#screen-todos .todo-filter-bar .tf').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTodos();
+}
+
+const dueLabelMap={today:'📅 Today',tomorrow:'➡ Tomorrow','this-week':'📆 This week',asap:'🔥 ASAP',someday:'🗓 Someday'};
+const dueSortMap={asap:0,today:1,tomorrow:2,'this-week':3,someday:4};
+
+function renderTodos(){
+  const p=proj(); if(!p) return;
+  // show only todos for this project
+  let items=DB.todos.filter(t=>t.projId===PID);
+  if(todoFilter==='today') items=items.filter(t=>t.due==='today'&&!t.done);
+  else if(todoFilter==='tomorrow') items=items.filter(t=>t.due==='tomorrow'&&!t.done);
+  else if(todoFilter==='pending') items=items.filter(t=>!t.done);
+  else if(todoFilter==='done') items=items.filter(t=>t.done);
+  else if(todoFilter==='urgent') items=items.filter(t=>t.pri==='urgent'&&!t.done);
+
+  // sort: urgent first, then by due, then done last
+  items.sort((a,b)=>{
+    if(a.done!==b.done) return a.done?1:-1;
+    if(a.pri==='urgent'&&b.pri!=='urgent') return -1;
+    if(b.pri==='urgent'&&a.pri!=='urgent') return 1;
+    return (dueSortMap[a.due]||99)-(dueSortMap[b.due]||99);
+  });
+
+  const list=document.getElementById('todoList');
+  if(!items.length){
+    list.innerHTML='<div class="empty"><div class="empty-ic">✅</div>No tasks here.</div>';return;
+  }
+  list.innerHTML='<div class="card" style="padding:10px 14px">'+items.map(t=>`
+    <div class="todo-item">
+      <div class="todo-check ${t.done?'done-c':''}" onclick="toggleTodo(${t.id})">${t.done?'✓':''}</div>
+      <div class="todo-body">
+        <div class="todo-text ${t.done?'striked':''}">${t.pri==='urgent'&&!t.done?'🔴 ':''}${esc(t.text)}</div>
+        ${t.note?`<div style="font-size:12px;color:var(--muted);margin-top:3px">${esc(t.note)}</div>`:''}
+        <div class="todo-meta">
+          <span class="todo-due">${dueLabelMap[t.due]||t.due}</span>
+        </div>
+      </div>
+      <button class="del-btn" onclick="deleteTodo(${t.id})">🗑</button>
+    </div>`).join('')+'</div>';
+}
+
+// INIT
+renderProjects();
+</script>
+</body>
+</html>
